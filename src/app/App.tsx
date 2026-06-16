@@ -112,7 +112,7 @@ function LandingSidePanels() {
 
  <img
   src="/zipi-main.png"
-  alt="Zippy"
+  alt="Zipy"
   style={{
     width: 130,
     height: 130,
@@ -301,7 +301,7 @@ function LandingSidePanels() {
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>("home");
   const [prevTab, setPrevTab] = useState<Tab | null>(null);
-  const [language, setLanguage] = useState<Language>("en");
+  const [language, setLanguage] = useState<Language>("ru");
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const isLight = theme === "light";
   const t = translations[language];
