@@ -8,7 +8,7 @@ export function SidePanels() {
   return (
     <>
       {/* LEFT */}
-      <div className="hidden xl:flex fixed left-16 top-1/2 -translate-y-1/2 w-[330px] flex-col gap-5">
+      <div className="hidden lg:flex fixed left-16 top-1/2 -translate-y-1/2 w-[330px] flex-col gap-5">
         <motion.div
           initial={{ opacity: 0, x: -24 }}
           animate={{ opacity: 1, x: 0 }}
@@ -69,7 +69,7 @@ export function SidePanels() {
       </div>
 
       {/* RIGHT */}
-      <div className="hidden xl:flex fixed right-16 top-1/2 -translate-y-1/2 w-[330px] flex-col gap-5">
+      <div className="hidden lg:flex fixed right-16 top-1/2 -translate-y-1/2 w-[330px] flex-col gap-5">
         <motion.div
           initial={{ opacity: 0, x: 24 }}
           animate={{ opacity: 1, x: 0 }}

@@ -110,15 +110,15 @@ function LandingSidePanels() {
   </h1>
 </div>
 
-  <img
-    src="/zipi-main.png"
-    alt="Zippy"
-    style={{
-      width: 120,
-      height: 120,
-      objectFit: "contain",
-    }}
-  />
+ <img
+  src="/zipi-main.png"
+  alt="Zippy"
+  style={{
+    width: 130,
+    height: 130,
+    objectFit: "contain",
+  }}
+/>
 </div>
 
           <p className="mb-5 font-['Inter'] text-sm leading-6 text-[#8f8faa]">
@@ -143,16 +143,50 @@ function LandingSidePanels() {
           </div>
         </motion.div>
       </div>
-
+            
       {/* ПРАВАЯ ПАНЕЛЬ */}
+      
       <div className="hidden xl:flex fixed right-16 top-1/2 -translate-y-1/2 w-[330px] flex-col gap-5">
+        
         <motion.div
           initial={{ opacity: 0, x: 24 }}
           animate={{ opacity: 1, x: 0 }}
           className="relative overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.04] p-6 backdrop-blur-xl"
         >
+          
           <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-purple-500/20 blur-3xl" />
-
+            <div
+  style={{
+    display: "flex",
+    justifyContent: "flex-center",
+    marginBottom: 16,
+  }}
+>
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      gap: 8,
+      background: "rgba(255,255,255,0.04)",
+      border: "1px solid rgba(255,255,255,0.06)",
+      borderRadius: 100,
+      padding: "6px 16px",
+    }}
+  >
+    <span style={{ fontSize: "14px" }}>⚔️</span>
+    <span
+      style={{
+        fontFamily: "'Plus Jakarta Sans', sans-serif",
+        fontSize: "12px",
+        fontWeight: 700,
+        color: "#6b6b8a",
+        letterSpacing: "0.8em",
+      }}
+    >
+      HABITQUEST⚔️
+    </span>
+  </div>
+</div>
           <p className="mb-2 text-xs uppercase tracking-[0.2em] text-cyan-300">
             Мини-демо
           </p>
@@ -463,28 +497,7 @@ const tabs: { id: Tab; label: string; icon: string; activeIcon: string }[] = [
         </div>
       </div>
 
-      {/* App label */}
-      <div
-        style={{
-          position: "fixed",
-          bottom: 20,
-          left: "50%",
-          transform: "translateX(-50%)",
-          display: "flex",
-          alignItems: "center",
-          gap: 8,
-          background: "rgba(255,255,255,0.04)",
-          border: "1px solid rgba(255,255,255,0.06)",
-          borderRadius: 100,
-          padding: "6px 16px",
-          pointerEvents: "none",
-        }}
-      >
-        <span style={{ fontSize: "14px" }}>⚔️</span>
-        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "12px", fontWeight: 700, color: "#6b6b8a", letterSpacing: "0.04em" }}>
-          HABITQUEST
-        </span>
-      </div>
+   
       {clicks.map((click) => (
   <motion.div
     key={click.id}
