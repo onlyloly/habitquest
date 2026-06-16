@@ -43,7 +43,7 @@ const translations = {
   },
 };
 
-const habits = [
+const initialHabits = [
   { id: 1, name: { en: "Morning Meditation", ru: "Утренняя медитация" }, emoji: "🧘", xp: 50, streak: 12, category: { en: "Mind", ru: "Разум" } },
   { id: 2, name: { en: "Read 30 Minutes", ru: "Читать 30 минут" }, emoji: "📚", xp: 40, streak: 7, category: { en: "Learning", ru: "Обучение" } },
   { id: 3, name: { en: "Workout", ru: "Тренировка" }, emoji: "💪", xp: 80, streak: 21, category: { en: "Health", ru: "Здоровье" } },
@@ -59,7 +59,7 @@ const recentAchievements = [
 
 export function HomeScreen({ language }: HomeScreenProps) {
   const t = translations[language];
-
+  const [habits, setHabits] = useState(initialHabits);
   const [completedHabits, setCompletedHabits] = useState<Set<number>>(new Set([2, 4]));
   const totalCoins = habits
   .filter((habit) => completedHabits.has(habit.id))
@@ -159,7 +159,7 @@ const currentCoins = baseCoins + totalCoins;
               fontSize: "18px",
             }}
           >
-            🧙
+            👩‍💻
           </div>
           <div
             style={{

@@ -1,10 +1,20 @@
 import { motion } from "motion/react";
-import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, BarChart, Bar, Tooltip } from "recharts";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  Tooltip,
+} from "recharts";
 
 type Language = "en" | "ru";
 
 type StatisticsScreenProps = {
   language: Language;
+  theme?: "dark" | "light";
 };
 
 const translations = {
@@ -72,62 +82,22 @@ const habitBreakdown = [
   { name: { en: "Finance", ru: "Финансы" }, pct: 12, color: "#f59e0b", emoji: "💰" },
 ];
 
-const CustomTooltip = ({ active, payload, label }: any) => {
-  if (active && payload && payload.length) {
-    return (
-      <div
-        style={{
-          background: "#1e1e30",
-          border: "1px solid rgba(139, 92, 246, 0.3)",
-          borderRadius: 10,
-          padding: "8px 12px",
-        }}
-      >
-        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "13px", color: "#a78bfa" }}>
-          {label}
-        </p>
-
-        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "14px", color: "#f0f0fa", fontWeight: 500 }}>
-          {payload[0].value} XP
-        </p>
-      </div>
-    );
-  }
-
-  return null;
-};
-
-const MonthlyTooltip = ({ active, payload, label, language }: any) => {
-  if (active && payload && payload.length) {
-    return (
-      <div
-        style={{
-          background: "#1e1e30",
-          border: "1px solid rgba(139, 92, 246, 0.3)",
-          borderRadius: 10,
-          padding: "8px 12px",
-        }}
-      >
-        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "13px", color: "#a78bfa" }}>
-          {label}
-        </p>
-
-        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "13px", color: "#6b6b8a" }}>
-          {language === "ru" ? "Цель" : "Goal"}: {payload[0]?.value}
-        </p>
-
-        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "14px", color: "#f0f0fa", fontWeight: 500 }}>
-          {language === "ru" ? "Привычки" : "Habits"}: {payload[1]?.value}
-        </p>
-      </div>
-    );
-  }
-
-  return null;
-};
-
-export function StatisticsScreen({ language }: StatisticsScreenProps) {
+export function StatisticsScreen({ language, theme = "dark" }: StatisticsScreenProps) {
+  const isLight = theme === "light";
   const t = translations[language];
+
+  const c = {
+    bg: isLight ? "#f7f4ff" : "transparent",
+    card: isLight ? "#ffffff" : "#13131f",
+    card2: isLight ? "#f0ecff" : "#1e1e30",
+    text: isLight ? "#1f1f3d" : "#f0f0fa",
+    muted: isLight ? "#6f6685" : "#6b6b8a",
+    softText: isLight ? "#4b4565" : "#c4c4d8",
+    border: isLight ? "rgba(124,58,237,0.12)" : "rgba(255,255,255,0.05)",
+    faint: isLight ? "rgba(124,58,237,0.08)" : "rgba(255,255,255,0.04)",
+    chartTick: isLight ? "#6f6685" : "#6b6b8a",
+    heatEmpty: isLight ? "rgba(124,58,237,0.08)" : "rgba(255,255,255,0.04)",
+  };
 
   const chartXpData = xpData.map((item) => ({
     day: item.day[language],
@@ -147,11 +117,62 @@ export function StatisticsScreen({ language }: StatisticsScreenProps) {
     { label: t.levelUps, value: "23", sub: t.total, color: "#06b6d4", emoji: "🎯" },
   ];
 
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (!active || !payload?.length) return null;
+
+    return (
+      <div
+        style={{
+          background: c.card2,
+          border: "1px solid rgba(139, 92, 246, 0.3)",
+          borderRadius: 10,
+          padding: "8px 12px",
+        }}
+      >
+        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 13, color: "#8b5cf6" }}>
+          {label}
+        </p>
+        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 14, color: c.text, fontWeight: 500 }}>
+          {payload[0].value} XP
+        </p>
+      </div>
+    );
+  };
+
+  const MonthlyTooltip = ({ active, payload, label }: any) => {
+    if (!active || !payload?.length) return null;
+
+    return (
+      <div
+        style={{
+          background: c.card2,
+          border: "1px solid rgba(139, 92, 246, 0.3)",
+          borderRadius: 10,
+          padding: "8px 12px",
+        }}
+      >
+        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 13, color: "#8b5cf6" }}>
+          {label}
+        </p>
+        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 13, color: c.muted }}>
+          {language === "ru" ? "Цель" : "Goal"}: {payload[0]?.value}
+        </p>
+        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 14, color: c.text, fontWeight: 500 }}>
+          {language === "ru" ? "Привычки" : "Habits"}: {payload[1]?.value}
+        </p>
+      </div>
+    );
+  };
+
   return (
-    <div className="flex flex-col gap-5 pb-6">
+    <div className="flex flex-col gap-5 pb-6 min-h-full" style={{ background: c.bg }}>
       <div className="px-5 pt-5">
-        <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "22px", fontWeight: 700, color: "#f0f0fa" }}>{t.title}</h1>
-        <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "13px", color: "#6b6b8a", marginTop: 2 }}>{t.subtitle}</p>
+        <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 22, fontWeight: 700, color: c.text }}>
+          {t.title}
+        </h1>
+        <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: c.muted, marginTop: 2 }}>
+          {t.subtitle}
+        </p>
       </div>
 
       <div className="px-5">
@@ -163,30 +184,33 @@ export function StatisticsScreen({ language }: StatisticsScreenProps) {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: i * 0.07 }}
               style={{
-                background: "#13131f",
+                background: c.card,
                 borderRadius: 18,
-                padding: "16px",
-                border: "1px solid rgba(255,255,255,0.05)",
+                padding: 16,
+                border: `1px solid ${c.border}`,
                 position: "relative",
                 overflow: "hidden",
+                boxShadow: isLight ? "0 12px 30px rgba(124,58,237,0.06)" : "none",
               }}
             >
               <div style={{ position: "absolute", top: -15, right: -15, width: 60, height: 60, borderRadius: "50%", background: `${s.color}18`, filter: "blur(10px)" }} />
-              <div style={{ fontSize: "22px", marginBottom: 8 }}>{s.emoji}</div>
-              <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "20px", fontWeight: 500, color: s.color }}>{s.value}</p>
-              <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "13px", fontWeight: 600, color: "#f0f0fa", marginTop: 2 }}>{s.label}</p>
-              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "11px", color: "#6b6b8a", marginTop: 1 }}>{s.sub}</p>
+              <div style={{ fontSize: 22, marginBottom: 8 }}>{s.emoji}</div>
+              <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 20, fontWeight: 500, color: s.color }}>{s.value}</p>
+              <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 13, fontWeight: 600, color: c.text, marginTop: 2 }}>{s.label}</p>
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: c.muted, marginTop: 1 }}>{s.sub}</p>
             </motion.div>
           ))}
         </div>
       </div>
 
       <div className="px-5">
-        <div style={{ background: "#13131f", borderRadius: 20, padding: "20px 16px", border: "1px solid rgba(255,255,255,0.05)" }}>
+        <div style={{ background: c.card, borderRadius: 20, padding: "20px 16px", border: `1px solid ${c.border}` }}>
           <div style={{ marginBottom: 16 }}>
-            <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "15px", fontWeight: 700, color: "#f0f0fa" }}>{t.xpThisWeek}</h3>
-            <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "22px", color: "#8b5cf6", marginTop: 4 }}>
-              2,320 <span style={{ fontSize: "13px", color: "#6b6b8a" }}>{t.xpEarned}</span>
+            <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 15, fontWeight: 700, color: c.text }}>
+              {t.xpThisWeek}
+            </h3>
+            <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 22, color: "#8b5cf6", marginTop: 4 }}>
+              2,320 <span style={{ fontSize: 13, color: c.muted }}>{t.xpEarned}</span>
             </p>
           </div>
 
@@ -198,8 +222,8 @@ export function StatisticsScreen({ language }: StatisticsScreenProps) {
                   <stop offset="100%" stopColor="#8b5cf6" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <XAxis dataKey="day" tick={{ fontSize: 11, fill: "#6b6b8a", fontFamily: "'Inter', sans-serif" }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 10, fill: "#6b6b8a" }} axisLine={false} tickLine={false} />
+              <XAxis dataKey="day" tick={{ fontSize: 11, fill: c.chartTick, fontFamily: "'Inter', sans-serif" }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 10, fill: c.chartTick }} axisLine={false} tickLine={false} />
               <Tooltip content={<CustomTooltip />} />
               <Area type="monotone" dataKey="xp" stroke="#8b5cf6" strokeWidth={2.5} fill="url(#xpGrad)" dot={{ r: 3, fill: "#8b5cf6", strokeWidth: 0 }} activeDot={{ r: 5, fill: "#a78bfa" }} />
             </AreaChart>
@@ -208,8 +232,8 @@ export function StatisticsScreen({ language }: StatisticsScreenProps) {
       </div>
 
       <div className="px-5">
-        <div style={{ background: "#13131f", borderRadius: 20, padding: "20px 16px", border: "1px solid rgba(255,255,255,0.05)" }}>
-          <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "15px", fontWeight: 700, color: "#f0f0fa", marginBottom: 16 }}>
+        <div style={{ background: c.card, borderRadius: 20, padding: "20px 16px", border: `1px solid ${c.border}` }}>
+          <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 15, fontWeight: 700, color: c.text, marginBottom: 16 }}>
             {t.monthlyCompletions}
           </h3>
 
@@ -221,10 +245,10 @@ export function StatisticsScreen({ language }: StatisticsScreenProps) {
                   <stop offset="100%" stopColor="#4c1d95" />
                 </linearGradient>
               </defs>
-              <XAxis dataKey="month" tick={{ fontSize: 11, fill: "#6b6b8a", fontFamily: "'Inter', sans-serif" }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 10, fill: "#6b6b8a" }} axisLine={false} tickLine={false} />
-              <Tooltip content={<MonthlyTooltip language={language} />} />
-              <Bar dataKey="goal" fill="rgba(255,255,255,0.04)" radius={[6, 6, 0, 0]} />
+              <XAxis dataKey="month" tick={{ fontSize: 11, fill: c.chartTick, fontFamily: "'Inter', sans-serif" }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 10, fill: c.chartTick }} axisLine={false} tickLine={false} />
+              <Tooltip content={<MonthlyTooltip />} />
+              <Bar dataKey="goal" fill={isLight ? "rgba(124,58,237,0.10)" : "rgba(255,255,255,0.04)"} radius={[6, 6, 0, 0]} />
               <Bar dataKey="habits" fill="url(#barGrad)" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -232,8 +256,8 @@ export function StatisticsScreen({ language }: StatisticsScreenProps) {
       </div>
 
       <div className="px-5">
-        <div style={{ background: "#13131f", borderRadius: 20, padding: "20px", border: "1px solid rgba(255,255,255,0.05)" }}>
-          <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "15px", fontWeight: 700, color: "#f0f0fa", marginBottom: 16 }}>
+        <div style={{ background: c.card, borderRadius: 20, padding: 20, border: `1px solid ${c.border}` }}>
+          <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 15, fontWeight: 700, color: c.text, marginBottom: 16 }}>
             {t.categoryBreakdown}
           </h3>
 
@@ -242,13 +266,13 @@ export function StatisticsScreen({ language }: StatisticsScreenProps) {
               <div key={h.name.en}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <span style={{ fontSize: "16px" }}>{h.emoji}</span>
-                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "13px", color: "#c4c4d8" }}>{h.name[language]}</span>
+                    <span style={{ fontSize: 16 }}>{h.emoji}</span>
+                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: c.softText }}>{h.name[language]}</span>
                   </div>
-                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "13px", color: h.color }}>{h.pct}%</span>
+                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 13, color: h.color }}>{h.pct}%</span>
                 </div>
 
-                <div style={{ height: 6, background: "rgba(255,255,255,0.05)", borderRadius: 100, overflow: "hidden" }}>
+                <div style={{ height: 6, background: c.faint, borderRadius: 100, overflow: "hidden" }}>
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${h.pct}%` }}
@@ -263,15 +287,17 @@ export function StatisticsScreen({ language }: StatisticsScreenProps) {
       </div>
 
       <div className="px-5">
-        <div style={{ background: "#13131f", borderRadius: 20, padding: "20px", border: "1px solid rgba(255,255,255,0.05)" }}>
-          <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "15px", fontWeight: 700, color: "#f0f0fa", marginBottom: 4 }}>
+        <div style={{ background: c.card, borderRadius: 20, padding: 20, border: `1px solid ${c.border}` }}>
+          <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 15, fontWeight: 700, color: c.text, marginBottom: 4 }}>
             {t.activityHeatmap}
           </h3>
-          <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "11px", color: "#6b6b8a", marginBottom: 14 }}>{t.last35Days}</p>
+          <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: c.muted, marginBottom: 14 }}>
+            {t.last35Days}
+          </p>
 
           <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
             {Array.from({ length: 35 }).map((_, i) => {
-              const intensity = Math.random();
+              const intensity = ((i * 17) % 100) / 100;
               const bg =
                 intensity > 0.8
                   ? "#8b5cf6"
@@ -279,7 +305,7 @@ export function StatisticsScreen({ language }: StatisticsScreenProps) {
                   ? "rgba(139,92,246,0.55)"
                   : intensity > 0.35
                   ? "rgba(139,92,246,0.25)"
-                  : "rgba(255,255,255,0.04)";
+                  : c.heatEmpty;
 
               return (
                 <div
